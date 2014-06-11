@@ -1,0 +1,35 @@
+#								-*-conf-*-
+#
+# Machinekit reprepro configuration for final unified archive
+#
+# Origin, Label, Description are copied into the Release file
+Origin: Dovetail Automata LLC
+Label: Machinekit
+Description: Machinekit packages for @CODENAME@
+ From Dovetail Automata LLC
+ .
+ This archive is updated with the latest Machinekit packages from the
+ Machinekit Buildbot and dependency packages from the Machinekit
+ autobuilder.
+ .
+ For more information:
+ http://www.machinekit.io
+ http://buildbot.dovetail-automata.com
+#
+# copied into Release files; stable, testing or unstable
+#
+# (the Debian kernel packaging wants anything besides 'testing' or
+# 'unstable' when the release looks like '3.8.13-1mk~@CODENAME@1'; pick
+# 'stable')
+Suite: stable
+# distribution; dists/@CODENAME@ & in Release files (auto-configured)
+Codename: @CODENAME@
+# What's this for?
+#Version: 3.0
+Architectures: amd64 i386 armhf armel source
+# List of distribution components
+Components: main
+# What to update
+Update: @UPDATES@
+# When we are ready...
+#SignWith: 

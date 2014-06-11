@@ -1,0 +1,13 @@
+#								-*-conf-*-
+#
+# Pull Machinekit autobuilder dependency packages for @CODENAME@
+#
+Name: mk-deps
+Method: @MK_DEPS_REPO@
+Suite: @CODENAME@
+Components: main
+Architectures: amd64 i386 armhf source
+VerifyRelease: blindtrust
+DownloadListsAs: .gz
+GetInRelease: no
+

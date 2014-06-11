@@ -1,0 +1,13 @@
+#								-*-conf-*-
+#
+# Pull Machinekit Buildbot packages for @CODENAME@
+#
+Name: mk-buildbot
+Method: @MK_BUILDBOT_REPO@
+Suite: @CODENAME@
+Components: main
+Architectures: amd64 i386 armhf source
+VerifyRelease: blindtrust
+DownloadListsAs: .gz
+GetInRelease: no
+

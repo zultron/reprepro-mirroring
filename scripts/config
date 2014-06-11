@@ -1,0 +1,15 @@
+#							-*-shell-script-*-
+# List of codenames
+CODENAMES="wheezy jessie"
+
+# Which codenames want which updates
+UPDATES_wheezy="mk-buildbot mk-deps"
+UPDATES_jessie="mk-deps"
+
+# URL for Machinekit Buildbot updates repo
+MK_BUILDBOT_REPO=file:///home/buildbot/results/+master/debian_archive
+# Override URL for Machinekit Buildbot updates repo
+MK_BUILDBOT_OVERRIDE_REPO=file:///home/buildbot/results/+override/debian_archive
+
+# URL for Machinekit dependencies repo
+MK_DEPS_REPO=file:///home/jman/machinekit-deb-dependency-autobuilder/ppa
