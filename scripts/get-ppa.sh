@@ -4,11 +4,13 @@ usage() {
     set +x
     test -z "$1" || echo "$1" >&2
     echo "Usage:" >&2
-    echo "    $0 -c codename [ -u | -U | -l | -i ]" >&2
+    echo "    $0 -c [ codename | all ] [ -u | -U | -l | -i |" \
+	"-r REPREPO ARGS... ]" >&2
     echo "	-u  check for updates" >&2
     echo "	-U  pull updates" >&2
     echo "	-l  list packages" >&2
     echo "	-i  init configs" >&2
+    echo "	-r  run reprepro with following args; must be last argument" >&2
     echo "  Set non-empty \$DEBUG environment variable for debug output" >&2
     exit 1
 }
@@ -23,16 +25,19 @@ debugmsg() {
 # Read command line opts
 
 # Process command line args
-while getopts c:luUi ARG; do
+ORIG_ARGS="$@"
+while getopts c:luUir ARG; do
     case $ARG in
         c) CODENAME="$OPTARG" ;;
 	u) COMMAND=checkupdates ;;
 	U) COMMAND=update ;;
 	l) COMMAND=list-archive ;;
 	i) COMMAND=render_archive_config ;;
+	r) COMMAND=run-reprepro; break ;;
 	*) usage
     esac
 done
+shift $((OPTIND-1))
 
 ####################################################
 # Initialize variables
@@ -50,7 +55,7 @@ run-reprepro() {
     REPREPRO="reprepro -VV -b $REPODIR \
 	--confdir +b/conf-$CODENAME --dbdir +b/db-$CODENAME"
     debugmsg "running:  ${REPREPRO} $*"
-    ${REPREPRO} $*
+    ${REPREPRO} "$@"
 }
 
 init-codename() {
@@ -137,21 +142,29 @@ list-archive() {
 checkupdates() {
     init-codename
     render_archive_config
-    run-reprepro checkupdate $CODENAME
+    run-reprepro --noskipold checkupdate $CODENAME
 }
 
 # Pull updates
 update() {
     init-codename
     render_archive_config
-    run-reprepro update $CODENAME
+    run-reprepro --noskipold update $CODENAME
 }
 
 ####################################################
 # Main program
 
-if test -n "$COMMAND"; then
-    $COMMAND
+# if CODENAME = all, rerun ourselves for each codename
+if test "$CODENAME" = all; then
+    . $CONFIG
+    for CODENAME in $CODENAMES; do
+	echo
+	echo "Re-running for codename $CODENAME"
+	$0 ${ORIG_ARGS/ all/ $CODENAME}
+    done
+elif test -n "$COMMAND"; then
+    $COMMAND "$@"
 else
     usage
 fi

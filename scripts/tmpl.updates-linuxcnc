@@ -1,0 +1,15 @@
+#								-*-conf-*-
+#
+# Pull LinuxCNC hostmot2-firmware packages for wheezy
+#
+Name: linuxcnc
+Method: http://www.linuxcnc.org
+Suite: wheezy
+# Translate base component to main
+Components: base>main
+Architectures: amd64 i386 source
+VerifyRelease: blindtrust
+DownloadListsAs: .gz
+GetInRelease: no
+FilterFormula: Source (== hostmot2-firmware)
+

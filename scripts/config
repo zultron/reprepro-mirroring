@@ -3,8 +3,8 @@
 CODENAMES="wheezy jessie"
 
 # Which codenames want which updates
-UPDATES_wheezy="mk-buildbot mk-deps"
-UPDATES_jessie="mk-deps"
+UPDATES_wheezy="mk-buildbot mk-deps linuxcnc"
+UPDATES_jessie="mk-deps linuxcnc"
 
 # URL for Machinekit Buildbot updates repo
 MK_BUILDBOT_REPO=file:///home/buildbot/results/+master/debian_archive
