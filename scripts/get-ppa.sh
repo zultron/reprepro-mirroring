@@ -25,14 +25,17 @@ usage() {
     set +x
     test -z "$1" || msg "$1"
     msg "Usage:"
-    msg "    $0 -c [ codename | all ] [ -u | -U | -l | -i | -d |" \
-	"-r REPREPO ARGS... ]"
+    msg "    $0 -c [ CODENAME | all ] [ -d ] \\"
+    msg "	[ -u | -U | -l | -i | -r REPREPO ARGS... ]"
+    msg "    $0 -k"
+    msg "	-c  CODENAME (wheezy, jessie, etc.) or 'all'"
+    msg "	-d  enable debug output"
     msg "	-u  check for updates"
     msg "	-U  pull updates"
     msg "	-l  list packages"
     msg "	-i  init configs"
-    msg "	-d  enable debug output"
     msg "	-r  run reprepro with following args; must be last argument"
+    msg "	-k  dump gpg package signing public key"
     exit 1
 }
 
@@ -41,7 +44,7 @@ usage() {
 
 # Process command line args
 ORIG_ARGS="$@"
-while getopts c:luUird ARG; do
+while getopts c:luUirdk ARG; do
     case $ARG in
         c) CODENAME="$OPTARG" ;;
 	u) COMMAND=checkupdates ;;
@@ -50,6 +53,7 @@ while getopts c:luUird ARG; do
 	i) COMMAND=render_archive_config ;;
 	r) COMMAND=run-reprepro; break ;;
 	d) DEBUG=1; REPREPRO_VERBOSE=-VV ;;
+	k) gpg --export --armor $PACKAGE_SIGNING_KEY; exit ;;
 	*) usage
     esac
 done
@@ -68,9 +72,9 @@ CONFIG=$SCRIPTSDIR/config
 
 run-reprepro() {
     # reprepro command
-    REPREPRO="reprepro $REPREPRO_VERBOSE -b $REPODIR \
+    REPREPRO="reprepro $REPREPRO_VERBOSE $GPG_ARG -b $REPODIR \
 	--confdir +b/conf-$CODENAME --dbdir +b/db-$CODENAME"
-    debugmsg "running:  ${REPREPRO} $*"
+    debugmsg running:  ${REPREPRO} $*
     ${REPREPRO} "$@"
 }
 
@@ -81,6 +85,12 @@ init-codename() {
     # read configuration
     . $CONFIG
     debugmsg "Read configuration from $CONFIG"
+
+    # GPG handling
+    if test -n "$GNUPGHOME"; then
+	export GNUPGHOME
+	GPG_ARG="--gnupghome $GNUPGHOME"
+    fi
 
     # check -c option is valid
     test -n "$CODENAME" || usage "No codename specified"

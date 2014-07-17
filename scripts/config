@@ -16,3 +16,16 @@ MK_BUILDBOT_OVERRIDE_REPO=$MK_BASE_URL/results/+override/debian_archive
 
 # URL for Machinekit dependencies repo
 MK_DEPS_REPO=$MK_BASE_URL/autobuilder
+
+# gpg keys
+GNUPGHOME=$SCRIPTSDIR/gnupg
+PACKAGE_SIGNING_KEY=73571BB9
+
+# Rsync locations
+#RSYNC_TARGETS="relay3 relay5"
+RSYNC_TARGETS="relay3"
+RSYNC_TARGET_relay3=relay3:/var/www/deb
+RSYNC_TARGET_relay5=relay5:/var/www/deb
+
+# proxy
+http_proxy=http://infra1:3128

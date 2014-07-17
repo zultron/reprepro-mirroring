@@ -31,5 +31,5 @@ Architectures: amd64 i386 armhf armel source
 Components: main base
 # What to update
 Update: @UPDATES@
-# When we are ready...
-#SignWith: 
+# Sign repo
+SignWith: 73571BB9

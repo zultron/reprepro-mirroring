@@ -1,3 +1,5 @@
 # Ignore everything but scripts directory
 /*/
 !/scripts/
+# Ignore gpg directory
+/scripts/gnupg
