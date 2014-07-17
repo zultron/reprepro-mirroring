@@ -1,19 +1,14 @@
 #!/bin/bash -e
 
-usage() {
-    set +x
-    test -z "$1" || echo "$1" >&2
-    echo "Usage:" >&2
-    echo "    $0 -c [ codename | all ] [ -u | -U | -l | -i |" \
-	"-r REPREPO ARGS... ]" >&2
-    echo "	-u  check for updates" >&2
-    echo "	-U  pull updates" >&2
-    echo "	-l  list packages" >&2
-    echo "	-i  init configs" >&2
-    echo "	-r  run reprepro with following args; must be last argument" >&2
-    echo "  Set non-empty \$DEBUG environment variable for debug output" >&2
-    exit 1
-}
+####################################################
+# Variable initialization
+
+# Verbose arg given to reprepro
+# This may be reduced by one '-v'
+REPREPRO_VERBOSE=-vv
+
+####################################################
+# Utility functions
 
 # Print debug messages
 debugmsg() {
@@ -21,12 +16,32 @@ debugmsg() {
     echo "DEBUG:  $*" >&2
 }
 
+# Print info messages
+msg() {
+    echo -e "$@" >&2
+}
+
+usage() {
+    set +x
+    test -z "$1" || msg "$1"
+    msg "Usage:"
+    msg "    $0 -c [ codename | all ] [ -u | -U | -l | -i | -d |" \
+	"-r REPREPO ARGS... ]"
+    msg "	-u  check for updates"
+    msg "	-U  pull updates"
+    msg "	-l  list packages"
+    msg "	-i  init configs"
+    msg "	-d  enable debug output"
+    msg "	-r  run reprepro with following args; must be last argument"
+    exit 1
+}
+
 ####################################################
 # Read command line opts
 
 # Process command line args
 ORIG_ARGS="$@"
-while getopts c:luUir ARG; do
+while getopts c:luUird ARG; do
     case $ARG in
         c) CODENAME="$OPTARG" ;;
 	u) COMMAND=checkupdates ;;
@@ -34,6 +49,7 @@ while getopts c:luUir ARG; do
 	l) COMMAND=list-archive ;;
 	i) COMMAND=render_archive_config ;;
 	r) COMMAND=run-reprepro; break ;;
+	d) DEBUG=1; REPREPRO_VERBOSE=-VV ;;
 	*) usage
     esac
 done
@@ -48,11 +64,11 @@ SCRIPTSDIR=$REPODIR/scripts
 CONFIG=$SCRIPTSDIR/config
 
 # Force debug logging
-DEBUG=1
+#DEBUG=1
 
 run-reprepro() {
     # reprepro command
-    REPREPRO="reprepro -VV -b $REPODIR \
+    REPREPRO="reprepro $REPREPRO_VERBOSE -b $REPODIR \
 	--confdir +b/conf-$CODENAME --dbdir +b/db-$CODENAME"
     debugmsg "running:  ${REPREPRO} $*"
     ${REPREPRO} "$@"
@@ -159,8 +175,7 @@ update() {
 if test "$CODENAME" = all; then
     . $CONFIG
     for CODENAME in $CODENAMES; do
-	echo
-	echo "Re-running for codename $CODENAME"
+	msg "\nRe-running for codename $CODENAME"
 	$0 ${ORIG_ARGS/ all/ $CODENAME}
     done
 elif test -n "$COMMAND"; then
