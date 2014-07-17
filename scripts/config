@@ -6,10 +6,13 @@ CODENAMES="wheezy jessie"
 UPDATES_wheezy="mk-buildbot mk-deps linuxcnc"
 UPDATES_jessie="mk-deps linuxcnc"
 
+# Base URL for internal package archives
+MK_BASE_URL=http://bb0.cf0.zultron.com
+
 # URL for Machinekit Buildbot updates repo
-MK_BUILDBOT_REPO=file:///home/buildbot/results/+master/debian_archive
+MK_BUILDBOT_REPO=$MK_BASE_URL/results/+master/debian_archive
 # Override URL for Machinekit Buildbot updates repo
-MK_BUILDBOT_OVERRIDE_REPO=file:///home/buildbot/results/+override/debian_archive
+MK_BUILDBOT_OVERRIDE_REPO=$MK_BASE_URL/results/+override/debian_archive
 
 # URL for Machinekit dependencies repo
-MK_DEPS_REPO=file:///home/jman/machinekit-deb-dependency-autobuilder/ppa
+MK_DEPS_REPO=$MK_BASE_URL/autobuilder

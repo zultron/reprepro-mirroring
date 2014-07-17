@@ -105,7 +105,7 @@ init-codename() {
 
     # If override repo exists, use it
     OVERRIDE_TEST_URL=$MK_BUILDBOT_OVERRIDE_REPO/dists/$CODENAME/Release
-    if curl -s -o /dev/null $OVERRIDE_TEST_URL; then
+    if curl -f -s -o /dev/null $OVERRIDE_TEST_URL; then
 	MK_BUILDBOT_REPO=$MK_BUILDBOT_OVERRIDE_REPO
 	debugmsg "Using buildbot override repo:"
 	debugmsg "    $MK_BUILDBOT_OVERRIDE_REPO"
