@@ -97,6 +97,12 @@ init-codename() {
     CONFIGDIR=$REPODIR/conf-${CODENAME}
     debugmsg "Archive configuration directory: ${CONFIGDIR}"
 
+    # Create any missing directories
+    if ! test -f $CONFIGDIR; then
+	debugmsg "Creating configuration directory $CONFIGDIR"
+	mkdir -p $CONFIGDIR
+    fi
+
     # If override repo exists, use it
     OVERRIDE_TEST_URL=$MK_BUILDBOT_OVERRIDE_REPO/dists/$CODENAME/Release
     if curl -s -o /dev/null $OVERRIDE_TEST_URL; then
