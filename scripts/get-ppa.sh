@@ -10,6 +10,9 @@ REPREPRO_VERBOSE=-vv
 # Don't run manual updates by default
 RUN_MANUAL_UPDATES=false
 
+# Quiet mode for cronjobs
+QUIET=true
+
 ####################################################
 # Utility functions
 
@@ -48,7 +51,7 @@ usage() {
 
 # Process command line args
 ORIG_ARGS="$@"
-while getopts c:luUirdkm ARG; do
+while getopts c:luUirdkmq ARG; do
     case $ARG in
         c) CODENAME="$OPTARG" ;;
 	u) COMMAND=checkupdates ;;
@@ -58,6 +61,7 @@ while getopts c:luUirdkm ARG; do
 	r) COMMAND=run-reprepro; break ;;
 	d) DEBUG=1; REPREPRO_VERBOSE=-VV ;;
 	m) RUN_MANUAL_UPDATES=true ;;
+	q) QUIET=true; REPREPRO_VERBOSE=-s ;;
 	k) gpg --export --armor $PACKAGE_SIGNING_KEY; exit ;;
 	*) usage
     esac
