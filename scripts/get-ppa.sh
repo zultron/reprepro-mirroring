@@ -11,7 +11,10 @@ REPREPRO_VERBOSE=-vv
 RUN_MANUAL_UPDATES=false
 
 # Quiet mode for cronjobs
-QUIET=true
+QUIET=false
+
+# Some commands don't need reprepro config initialized
+INIT=true
 
 ####################################################
 # Utility functions
@@ -24,6 +27,7 @@ debugmsg() {
 
 # Print info messages
 msg() {
+    ! ${QUIET} || return 0
     echo -e "$@" >&2
 }
 
@@ -167,8 +171,6 @@ render_configfile() {
 
 # set up distributions and updates files
 render_archive_config() {
-    init-codename
-
     debugmsg "Rendering archive configuration with replacements:"
     debugmsg "    CODENAME -> ${CODENAME}"
     debugmsg "    MK_BUILDBOT_REPO -> ${MK_BUILDBOT_REPO}"
@@ -183,20 +185,17 @@ render_archive_config() {
 
 # List Debian archive
 list-archive() {
-    init-codename
     run-reprepro -C main list $CODENAME
 }
 
 # Testing:  see what updates would be pulled
 checkupdates() {
-    init-codename
     render_archive_config
     run-reprepro --noskipold checkupdate $CODENAME
 }
 
 # Pull updates
 update() {
-    init-codename
     render_archive_config
     run-reprepro --noskipold update $CODENAME
 }
@@ -212,6 +211,13 @@ if test "$CODENAME" = all; then
 	$0 ${ORIG_ARGS/ all/ $CODENAME}
     done
 elif test -n "$COMMAND"; then
+    if ${INIT}; then
+	init-codename
+	if test -z "${ALL_UPDATES}"; then
+	    msg "No repos configured for update; exiting"
+	    exit 0
+	fi
+    fi    
     $COMMAND "$@"
 else
     usage

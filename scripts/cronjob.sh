@@ -1,4 +1,4 @@
-#!/bin/bash -xe
+#!/bin/bash -e
 
 # Run get-ppa.sh -U and rsync to website
 
@@ -11,9 +11,9 @@ TOP_DIR=$(readlink -f $SCRIPT_DIR/..)
 export http_proxy
 
 # Run get-ppa.sh
-$SCRIPT_DIR/get-ppa.sh -c all -U
+$SCRIPT_DIR/get-ppa.sh -q -c all -U
 
 # Rsync
 for target in $RSYNC_TARGETS; do
-    eval "rsync -avz $TOP_DIR/{dists,pool} \$RSYNC_TARGET_$target"
+    eval "rsync -avzq $TOP_DIR/{dists,pool} \$RSYNC_TARGET_$target"
 done
