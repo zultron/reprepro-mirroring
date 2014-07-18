@@ -7,6 +7,9 @@
 # This may be reduced by one '-v'
 REPREPRO_VERBOSE=-vv
 
+# Don't run manual updates by default
+RUN_MANUAL_UPDATES=false
+
 ####################################################
 # Utility functions
 
@@ -25,11 +28,12 @@ usage() {
     set +x
     test -z "$1" || msg "$1"
     msg "Usage:"
-    msg "    $0 -c [ CODENAME | all ] [ -d ] \\"
+    msg "    $0 -c [ CODENAME | all ] [ -d ] [ -m ] \\"
     msg "	[ -u | -U | -l | -i | -r REPREPO ARGS... ]"
     msg "    $0 -k"
     msg "	-c  CODENAME (wheezy, jessie, etc.) or 'all'"
     msg "	-d  enable debug output"
+    msg "	-m  run manual updates"
     msg "	-u  check for updates"
     msg "	-U  pull updates"
     msg "	-l  list packages"
@@ -44,7 +48,7 @@ usage() {
 
 # Process command line args
 ORIG_ARGS="$@"
-while getopts c:luUirdk ARG; do
+while getopts c:luUirdkm ARG; do
     case $ARG in
         c) CODENAME="$OPTARG" ;;
 	u) COMMAND=checkupdates ;;
@@ -53,6 +57,7 @@ while getopts c:luUirdk ARG; do
 	i) COMMAND=render_archive_config ;;
 	r) COMMAND=run-reprepro; break ;;
 	d) DEBUG=1; REPREPRO_VERBOSE=-VV ;;
+	m) RUN_MANUAL_UPDATES=true ;;
 	k) gpg --export --armor $PACKAGE_SIGNING_KEY; exit ;;
 	*) usage
     esac
@@ -100,8 +105,16 @@ init-codename() {
 
     # Get list of updates for the codename
     eval UPDATES=\${UPDATES_${CODENAME}}
+    eval MANUAL_UPDATES=\${MANUAL_UPDATES_${CODENAME}}
+
+    # List of updates for this run
+    ALL_UPDATES="${UPDATES}"
+    ${RUN_MANUAL_UPDATES} && ALL_UPDATES+=" ${MANUAL_UPDATES}"
+    debugmsg "Updates for this run:  $ALL_UPDATES"
+
     # Expand input template file names
-    UPDATES_TEMPLATES=$(for u in $UPDATES; do echo -n "tmpl.updates-$u "; done)
+    UPDATES_TEMPLATES=$(for u in $ALL_UPDATES; do \
+	echo -n "tmpl.updates-$u "; done)
 
     # Set config dir
     CONFIGDIR=$REPODIR/conf-${CODENAME}
@@ -141,7 +154,7 @@ render_configfile() {
 	    -e "s,@CODENAME@,${CODENAME},g" \
 	    -e "s,@MK_BUILDBOT_REPO@,${MK_BUILDBOT_REPO}," \
 	    -e "s,@MK_DEPS_REPO@,${MK_DEPS_REPO}," \
-	    -e "s,@UPDATES@,${UPDATES},g" \
+	    -e "s,@UPDATES@,${ALL_UPDATES},g" \
 	    -e '2,$p' \
 	    >> $DST_CONFIG
 	# test -n "$DEBUG" || { echo -e "\n${DST_CONFIG}:"; cat $DST_CONFIG; }

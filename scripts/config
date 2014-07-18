@@ -3,8 +3,11 @@
 CODENAMES="wheezy jessie"
 
 # Which codenames want which updates
-UPDATES_wheezy="mk-buildbot mk-deps linuxcnc"
-UPDATES_jessie="mk-deps linuxcnc"
+UPDATES_wheezy="mk-buildbot"
+UPDATES_jessie=""
+
+MANUAL_UPDATES_wheezy="linuxcnc mk-deps"
+MANUAL_UPDATES_jessie="linuxcnc mk-deps"
 
 # Base URL for internal package archives
 MK_BASE_URL=http://bb0.cf0.zultron.com

@@ -1,2 +1,4 @@
+MAILTO=jman@zultron.com
+
 # Update archive, sign, and rsync to external server
 0-59/5 * * * * /home/packages/ppa-unified/scripts/cronjob.sh
