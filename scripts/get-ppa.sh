@@ -1,22 +1,6 @@
 #!/bin/bash -e
 
 ####################################################
-# Variable initialization
-
-# Verbose arg given to reprepro
-# This may be reduced by one '-v'
-REPREPRO_VERBOSE=-vv
-
-# Don't run manual updates by default
-RUN_MANUAL_UPDATES=false
-
-# Quiet mode for cronjobs
-QUIET=false
-
-# Some commands don't need reprepro config initialized
-INIT=true
-
-####################################################
 # Utility functions
 
 # Print debug messages
@@ -51,6 +35,40 @@ usage() {
 }
 
 ####################################################
+# Variable initialization
+
+# Verbose arg given to reprepro
+# This may be reduced by one '-v'
+REPREPRO_VERBOSE=-vv
+
+# Don't run manual updates by default
+RUN_MANUAL_UPDATES=false
+
+# Quiet mode for cronjobs
+QUIET=false
+
+# Some commands don't need reprepro config initialized
+INIT=true
+
+# Where this system lives
+REPODIR=$(readlink -f $(dirname $0)/..)
+SCRIPTSDIR=$REPODIR/scripts
+CONFIG=$SCRIPTSDIR/config
+
+# read configuration
+. $CONFIG
+debugmsg "Read configuration from $CONFIG"
+
+# GPG handling
+if test -n "$GNUPGHOME"; then
+    export GNUPGHOME
+    GPG_ARG="--gnupghome $GNUPGHOME"
+fi
+
+# Force debug logging
+#DEBUG=1
+
+####################################################
 # Read command line opts
 
 # Process command line args
@@ -73,15 +91,7 @@ done
 shift $((OPTIND-1))
 
 ####################################################
-# Initialize variables
-
-# Where this system lives
-REPODIR=$(readlink -f $(dirname $0)/..)
-SCRIPTSDIR=$REPODIR/scripts
-CONFIG=$SCRIPTSDIR/config
-
-# Force debug logging
-#DEBUG=1
+# Utility functions
 
 run-reprepro() {
     # reprepro command
@@ -94,16 +104,6 @@ run-reprepro() {
 init-codename() {
     # only do this once
     test -z "${CODENAMES}" || return 0
-
-    # read configuration
-    . $CONFIG
-    debugmsg "Read configuration from $CONFIG"
-
-    # GPG handling
-    if test -n "$GNUPGHOME"; then
-	export GNUPGHOME
-	GPG_ARG="--gnupghome $GNUPGHOME"
-    fi
 
     # check -c option is valid
     test -n "$CODENAME" || usage "No codename specified"
