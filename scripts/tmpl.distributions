@@ -28,7 +28,7 @@ Codename: @CODENAME@
 #Version: 3.0
 Architectures: amd64 i386 armhf armel source
 # List of distribution components
-Components: main base
+Components: main
 # What to update
 Update: @UPDATES@
 # Sign repo
