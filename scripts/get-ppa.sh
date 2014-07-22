@@ -102,9 +102,6 @@ run-reprepro() {
 }
 
 init-codename() {
-    # only do this once
-    test -z "${CODENAMES}" || return 0
-
     # check -c option is valid
     test -n "$CODENAME" || usage "No codename specified"
     test "$CODENAMES" != "${CODENAMES/${CODENAME}}" || \
