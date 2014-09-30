@@ -7,7 +7,7 @@ CMD_VERBOSE=-q
 
 while getopts v ARG; do
     case $ARG in
-	v) VERBOSE=true; CMD_VERBOSE="" ;;
+	v) VERBOSE=true; CMD_VERBOSE=""; set -x ;;
     esac
 done
 
