@@ -25,6 +25,14 @@ PPA_CMD="$SCRIPT_DIR/get-ppa.sh ${CMD_VERBOSE} -c all -U"
 ! ${VERBOSE} || echo "running '${PPA_CMD}'"
 ${PPA_CMD}
 
+# Lock
+LOCKDIR=/tmp/ppa-rsync.lock
+if ! mkdir $LOCKDIR 2>/dev/null; then
+    echo "ppa-rsync is already running."
+    exit 1
+fi
+trap "rmdir $LOCKDIR; exit" INT TERM EXIT
+
 # Rsync
 for target in $RSYNC_TARGETS; do
     TARGETS="$TOP_DIR/dists $TOP_DIR/pool"
