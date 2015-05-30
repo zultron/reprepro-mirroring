@@ -1,0 +1,13 @@
+#								-*-conf-*-
+#
+# Pull Dovetail Automata test packages for @CODENAME@
+#
+Name: da-test
+Method: @DA_TEST_REPO@
+Suite: @CODENAME@
+Components: main
+Architectures: amd64 i386 source
+VerifyRelease: blindtrust
+DownloadListsAs: .gz
+GetInRelease: no
+

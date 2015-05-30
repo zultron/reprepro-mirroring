@@ -1,16 +1,18 @@
 #							-*-shell-script-*-
 # List of codenames
-CODENAMES="wheezy jessie trusty"
+CODENAMES="wheezy jessie jessie_bleeding trusty"
 
 # Which codenames want which updates
 UPDATES_wheezy="mk-buildbot"
-UPDATES_jessie=""
+UPDATES_jessie="mk-buildbot"
+UPDATES_jessie_bleeding=""
 UPDATES_trusty=""
 
 # MANUAL_UPDATES_wheezy="linuxcnc mk-deps"
 # MANUAL_UPDATES_jessie="linuxcnc mk-deps"
 MANUAL_UPDATES_wheezy="mk-deps"
-MANUAL_UPDATES_jessie="mk-deps"
+MANUAL_UPDATES_jessie="da-test"
+MANUAL_UPDATES_jessie_bleeding="da-test"
 MANUAL_UPDATES_trusty="mk-deps"
 
 # Base URL for internal package archives
@@ -23,6 +25,9 @@ MK_BUILDBOT_OVERRIDE_REPO=$MK_BASE_URL/results/+override/debian_archive
 
 # URL for Machinekit dependencies repo
 MK_DEPS_REPO=$MK_BASE_URL/autobuilder
+
+# URL for Machinekit test dependencies repo
+DA_TEST_REPO=$MK_BASE_URL/da-test-repo/
 
 # gpg keys
 GNUPGHOME=$SCRIPTSDIR/gnupg

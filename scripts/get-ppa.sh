@@ -159,6 +159,7 @@ render_configfile() {
 	    -e "s,@CODENAME@,${CODENAME},g" \
 	    -e "s,@MK_BUILDBOT_REPO@,${MK_BUILDBOT_REPO}," \
 	    -e "s,@MK_DEPS_REPO@,${MK_DEPS_REPO}," \
+	    -e "s,@DA_TEST_REPO@,${DA_TEST_REPO}," \
 	    -e "s,@UPDATES@,${ALL_UPDATES},g" \
 	    -e '2,$p' \
 	    >> $DST_CONFIG
