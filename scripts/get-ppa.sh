@@ -56,6 +56,8 @@ SCRIPTSDIR=$REPODIR/scripts
 CONFIG=$SCRIPTSDIR/config
 
 # read configuration
+declare -A UPDATES
+declare -A MANUAL_UPDATES
 . $CONFIG
 debugmsg "Read configuration from $CONFIG"
 
@@ -108,13 +110,9 @@ init-codename() {
 	usage "Valid codenames are:  ${CODENAMES}"
     debugmsg "Validated codename:  ${CODENAME}"
 
-    # Get list of updates for the codename
-    eval UPDATES=\${UPDATES_${CODENAME}}
-    eval MANUAL_UPDATES=\${MANUAL_UPDATES_${CODENAME}}
-
     # List of updates for this run
-    ALL_UPDATES="${UPDATES}"
-    ${RUN_MANUAL_UPDATES} && ALL_UPDATES+=" ${MANUAL_UPDATES}"
+    ALL_UPDATES="${UPDATES[$CODENAME]}"
+    ${RUN_MANUAL_UPDATES} && ALL_UPDATES+=" ${MANUAL_UPDATES[$CODENAME]}"
     debugmsg "Updates for this run:  $ALL_UPDATES"
 
     # Expand input template file names

@@ -1,19 +1,19 @@
 #							-*-shell-script-*-
 # List of codenames
-CODENAMES="wheezy jessie jessie_bleeding trusty"
+CODENAMES="wheezy jessie jessie-bleeding trusty"
 
 # Which codenames want which updates
-UPDATES_wheezy="mk-buildbot"
-UPDATES_jessie="mk-buildbot"
-UPDATES_jessie_bleeding=""
-UPDATES_trusty=""
+UPDATES[wheezy]="mk-buildbot"
+UPDATES[jessie]="mk-buildbot"
+UPDATES[jessie-bleeding]=""
+UPDATES[trusty]=""
 
 # MANUAL_UPDATES_wheezy="linuxcnc mk-deps"
 # MANUAL_UPDATES_jessie="linuxcnc mk-deps"
-MANUAL_UPDATES_wheezy="mk-deps"
-MANUAL_UPDATES_jessie="da-test"
-MANUAL_UPDATES_jessie_bleeding="da-test"
-MANUAL_UPDATES_trusty="mk-deps"
+MANUAL_UPDATES[wheezy]="mk-deps"
+MANUAL_UPDATES[jessie]="da-test"
+MANUAL_UPDATES[jessie-bleeding]="da-test"
+MANUAL_UPDATES[trusty]="mk-deps"
 
 # Base URL for internal package archives
 MK_BASE_URL=http://bb0.cf0.zultron.com
