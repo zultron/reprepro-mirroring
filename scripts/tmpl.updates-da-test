@@ -6,7 +6,7 @@ Name: da-test
 Method: @DA_TEST_REPO@
 Suite: @CODENAME@
 Components: main
-Architectures: amd64 i386 source
+Architectures: amd64 i386 armhf source
 VerifyRelease: blindtrust
 DownloadListsAs: .gz
 GetInRelease: no
